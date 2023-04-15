@@ -22,7 +22,7 @@
         where id = #{id}
     </select>
 
-    <select id="findAll">
+    <select id="findAll" resultType="Item">
         select id, item_name, price,quantity
         from item
         <where>
