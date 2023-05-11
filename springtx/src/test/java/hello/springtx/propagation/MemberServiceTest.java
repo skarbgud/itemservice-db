@@ -87,4 +87,21 @@ class MemberServiceTest {
         Assertions.assertTrue(memberRepository.find(username).isPresent());
         Assertions.assertTrue(logRepository.find(username).isPresent());
     }
+
+    /**
+     * memberService @Transactional:ON
+     * memberRepository @Transactional:ON
+     * logRepository @Transactional:ON Exception
+     */
+    @Test
+    void outerTxOn_fail() {
+        //given
+        String username = "로그예외_outerTxOn_fail";
+        //when
+        assertThatThrownBy(() -> memberService.joinV1(username))
+                .isInstanceOf(RuntimeException.class);  //memberRepository에서 커밋을 하지만 실제 커밋x, logRepository에서 런타임예외 throw 상위로 전파 => 전체 롤백
+        //then: 모든 데이터가 롤백된다.
+        Assertions.assertTrue(memberRepository.find(username).isEmpty());
+        Assertions.assertTrue(logRepository.find(username).isEmpty());
+    }
 }
