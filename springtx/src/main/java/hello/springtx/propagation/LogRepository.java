@@ -3,6 +3,7 @@ package hello.springtx.propagation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -15,7 +16,7 @@ public class LogRepository {
 
     private final EntityManager em;
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)  //기존 트랜잭션에 참여하는 REQUIRED 대신에, REQUIRES_NEW로 신규 트랜잭션을 생성
     public void save(Log logMessage) {
         log.info("log 저장");
         em.persist(logMessage);
